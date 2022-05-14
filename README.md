@@ -1,5 +1,5 @@
 # Tool for making new projects
-### The concept of this tool is to create a basic entry point for every project. It's camble of creating source file for diffrent project(C++, C, Python, Shell script) with all dependencis and library that I am using in my projects.
+**The concept of this tool is to create a basic entry point for every project. It's camble of creating source file for diffrent project(C++, C, Python, Shell script) with all dependencis and library that I am using in my projects.**
 ### How to build
 ```
 make
