@@ -6,8 +6,8 @@ make
 ```
 ## Required package:
 ### Those are required package to build a project(in the future there will be a shell script to install all dependencis)
-NCURSES - C++ library for console handling on Linux
-MAKE - for building project
-GCC - as a C++ compiler
+- Ncurses - C++ library for console handling on Linux
+- Make - for building project
+- GCC - as a C++ compiler
 
 
