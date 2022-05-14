@@ -1,9 +1,16 @@
-#include "directory.hpp"
+#include "../include/directory.hpp"
 #include <dirent.h>
 #include <sys/types.h>
 #include <cstdio>
 #include <cstdlib>
 #include <curses.h>
+
+bool create_directory(void)
+{
+    // directory::directory_menu();
+
+    return true;
+}
 
 void directory::directory_menu()
 {

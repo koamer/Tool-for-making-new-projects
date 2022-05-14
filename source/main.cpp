@@ -12,14 +12,7 @@
 #include <chrono>
 #include <clocale>
 
-#include "directory.hpp"
-
-bool create_directory(void)
-{
-	// directory::directory_menu();
-
-	return true;
-}
+#include "../include/directory.hpp"
 
 enum class Options
 {
@@ -53,19 +46,6 @@ static void init_logs_1_stage(void)
 	{
 		endwin();
 		printf("Cannot attach to error logs file\n");
-		exit(EXIT_FAILURE);
-	}
-	int fd_debug_logs = open("debug_logs.txt", O_CREAT | O_WRONLY, S_IRWXU);
-	if (fd_debug_logs < 0)
-	{
-		endwin();
-		printf("Cannot create debug logs file\n");
-		exit(EXIT_FAILURE);
-	}
-	if (dup2(fd_debug_logs, STDOUT_FILENO) < 0)
-	{
-		endwin();
-		printf("Cannot attach to debug logs file\n");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -138,6 +118,7 @@ static Options menu(void)
 			char selected_item = item_name(current_item(my_menu))[0];
 			current_options = static_cast<unsigned int>(selected_item - '0');
 			opt = static_cast<Options>(current_options);
+			return opt;
 			break;
 		}
 		}
@@ -197,8 +178,9 @@ int main(void)
 	{
 		endwin();
 		exit(EXIT_FAILURE);
-		printw("Something went wrong");
+		logs_err("Something went wrong");
 	}
 	}
 	endwin();
+	return 0;
 }
