@@ -18,3 +18,6 @@ inline void app::logs_err(std::string logs)
 	std::string time = app::get_current_time();
 	fprintf(stderr, "Logs %s: ERROR: %s\n", time.c_str(), logs.c_str());
 }
+void cpp_menu()
+{
+}

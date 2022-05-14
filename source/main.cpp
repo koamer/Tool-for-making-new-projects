@@ -58,7 +58,7 @@ static Options menu(void)
 	std::vector<std::pair<std::string, std::string>> choices = {
 			{"1. C++", "Creating C++ enviroment"},
 			{"2. C", "Creating C enviroment"},
-			{"3. Python", "Crearing Python source file"},
+			{"3. Python", "Crearing Python script"},
 			{"4. Shell Script", "Creating Shell script"},
 			{"5. Exit", ""},
 	};
@@ -75,11 +75,11 @@ static Options menu(void)
 	post_menu(my_menu);
 	refresh();
 
-	int c;
+	int key;
 	unsigned int current_options;
-	while ((c = getch()))
+	while ((key = getch()))
 	{
-		switch (c)
+		switch (key)
 		{
 		case KEY_DOWN:
 		{
@@ -104,10 +104,6 @@ static Options menu(void)
 	}
 	return opt;
 }
-void cpp_menu()
-{
-	// TODO
-}
 void c_menu()
 {
 	// TODO
@@ -129,7 +125,7 @@ int main(void)
 	{
 	case Options::OPTIONS_1:
 	{
-		cpp_menu();
+		app::cpp_menu();
 		break;
 	}
 	case Options::OPTIONS_2:
