@@ -13,6 +13,7 @@
 #include <clocale>
 
 #include "../include/directory.hpp"
+#include "../include/app.hpp"
 
 enum class Options
 {
@@ -22,16 +23,6 @@ enum class Options
 	OPTIONS_4 = 4,
 	EXIT = 5,
 };
-
-const std::string get_current_time(void)
-{
-	char time_string[64];
-	auto time = std::chrono::system_clock::now();
-	auto time_c = std::chrono::system_clock::to_time_t(time);
-	std::tm now_tm = *std::localtime(&time_c);
-	strftime(time_string, sizeof(time_string), "%A %c", &now_tm);
-	return (std::string(time_string));
-}
 
 static void init_logs_1_stage(void)
 {
@@ -48,18 +39,6 @@ static void init_logs_1_stage(void)
 		printf("Cannot attach to error logs file\n");
 		exit(EXIT_FAILURE);
 	}
-}
-
-inline void logs_err(std::string logs)
-{
-	std::string time = get_current_time();
-	fprintf(stderr, "Logs %s: ERROR: %s\n", time.c_str(), logs.c_str());
-}
-
-inline void logs_debug(std::string logs)
-{
-	std::string time = get_current_time();
-	fprintf(stdout, "Logs %s: DEBUG: %s\n", time.c_str(), logs.c_str());
 }
 
 inline void init_ncurse(void)
@@ -178,7 +157,7 @@ int main(void)
 	{
 		endwin();
 		exit(EXIT_FAILURE);
-		logs_err("Something went wrong");
+		app::logs_err("Something went wrong");
 	}
 	}
 	endwin();
