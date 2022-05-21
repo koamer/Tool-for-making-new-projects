@@ -1,6 +1,9 @@
+#include <curses.h>
 #include <string>
 #include <chrono>
 #include <cstdio>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "../include/app.hpp"
 
@@ -18,6 +21,24 @@ inline void app::logs_err(std::string logs)
 	std::string time = app::get_current_time();
 	fprintf(stderr, "Logs %s: ERROR: %s\n", time.c_str(), logs.c_str());
 }
-void cpp_menu()
+void app::init_logs_1_stage(void) {
+	int fd_error_logs = open("err_logs.txt",
+				O_CREAT | O_WRONLY,
+				S_IRWXU);
+	if(fd_error_logs < 0)
+	{
+		endwin();
+		printf("Cannot create error logs file\n");
+		exit(EXIT_FAILURE);
+	}
+	if(dup2(fd_error_logs, STDERR_FILENO) < 0)
+	{
+		endwin();
+		printf("Cannot attach to error logs file\n");
+		exit(EXIT_FAILURE);
+	}
+}
+
+void app::cpp_menu()
 {
 }

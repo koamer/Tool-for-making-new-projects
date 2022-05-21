@@ -15,44 +15,18 @@
 #include "../include/directory.hpp"
 #include "../include/app.hpp"
 
-enum class Options
-{
-	OPTIONS_1 = 1,
-	OPTIONS_2 = 2,
-	OPTIONS_3 = 3,
-	OPTIONS_4 = 4,
-	EXIT = 5,
-};
-
-static void init_logs_1_stage(void)
-{
-	int fd_error_logs = open("err_logs.txt", O_CREAT | O_WRONLY, S_IRWXU);
-	if (fd_error_logs < 0)
-	{
-		endwin();
-		printf("Cannot create error logs file\n");
-		exit(EXIT_FAILURE);
-	}
-	if (dup2(fd_error_logs, STDERR_FILENO) < 0)
-	{
-		endwin();
-		printf("Cannot attach to error logs file\n");
-		exit(EXIT_FAILURE);
-	}
-}
-
-inline void init_ncurse(void)
+static void init_ncurse(void)
 {
 	initscr();
 	cbreak();
 	noecho();
 	keypad(stdscr, TRUE);
-	init_logs_1_stage();
+	app::init_logs_1_stage();
 }
 
-static Options menu(void)
+static app::Options menu(void)
 {
-	enum Options opt = Options::EXIT;
+	enum app::Options opt = app::Options::EXIT;
 	ITEM **my_items;
 	MENU *my_menu;
 	std::vector<std::pair<std::string, std::string>> choices = {
@@ -96,12 +70,13 @@ static Options menu(void)
 			move(20, 0);
 			char selected_item = item_name(current_item(my_menu))[0];
 			current_options = static_cast<unsigned int>(selected_item - '0');
-			opt = static_cast<Options>(current_options);
+			opt = static_cast<app::Options>(current_options);
 			return opt;
 			break;
 		}
 		}
 	}
+	free(my_items);
 	return opt;
 }
 void c_menu()
@@ -120,30 +95,30 @@ void pyhon_menu()
 int main(void)
 {
 	init_ncurse();
-	Options choice = menu();
+	app::Options choice = menu();
 	switch (choice)
 	{
-	case Options::OPTIONS_1:
+	case app::Options::OPTIONS_1:
 	{
 		app::cpp_menu();
 		break;
 	}
-	case Options::OPTIONS_2:
+	case app::Options::OPTIONS_2:
 	{
 		c_menu();
 		break;
 	}
-	case Options::OPTIONS_3:
+	case app::Options::OPTIONS_3:
 	{
 		pyhon_menu();
 		break;
 	}
-	case Options::OPTIONS_4:
+	case app::Options::OPTIONS_4:
 	{
 		sh_menu();
 		break;
 	}
-	case Options::EXIT:
+	case app::Options::EXIT:
 	{
 		endwin();
 		exit(EXIT_SUCCESS);
