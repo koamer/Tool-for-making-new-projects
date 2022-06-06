@@ -3,14 +3,6 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
-#include <utility>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <ctime>
-#include <chrono>
-#include <clocale>
 
 #include "../include/directory.hpp"
 #include "../include/app.hpp"
@@ -79,18 +71,6 @@ static app::Options menu(void)
 	free(my_items);
 	return opt;
 }
-void c_menu()
-{
-	// TODO
-}
-void sh_menu()
-{
-	// TODO
-}
-void pyhon_menu()
-{
-	// TODO
-}
 
 int main(void)
 {
@@ -105,17 +85,17 @@ int main(void)
 	}
 	case app::Options::OPTIONS_2:
 	{
-		c_menu();
+		app::c_menu();
 		break;
 	}
 	case app::Options::OPTIONS_3:
 	{
-		pyhon_menu();
+		app::python_menu();
 		break;
 	}
 	case app::Options::OPTIONS_4:
 	{
-		sh_menu();
+		app::sh_menu();
 		break;
 	}
 	case app::Options::EXIT:

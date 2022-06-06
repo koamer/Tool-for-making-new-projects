@@ -13,6 +13,9 @@ namespace app
 
 	const std::string get_current_time(void);
 	void logs_err(std::string logs);
-	void cpp_menu();
 	void init_logs_1_stage(void);
+	void c_menu();
+	void cpp_menu();
+	void python_menu();
+	void sh_menu();
 } // namespace app
