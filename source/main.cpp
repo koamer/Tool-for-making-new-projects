@@ -1,11 +1,7 @@
-#include <menu.h>
 #include <curses.h>
-#include <cstdlib>
-#include <vector>
-#include <string>
 
-#include "../include/directory.hpp"
 #include "../include/app.hpp"
+#include "../include/directory.hpp"
 
 static void init_ncurse(void)
 {
@@ -16,100 +12,51 @@ static void init_ncurse(void)
 	app::init_logs_1_stage();
 }
 
-static app::Options menu(void)
+int main(void)
 {
-	enum app::Options opt = app::Options::EXIT;
-	ITEM **my_items;
-	MENU *my_menu;
-	std::vector<std::pair<std::string, std::string>> choices = {
+	app::Menu_options base_menu = {
 			{"1. C++", "Creating C++ enviroment"},
 			{"2. C", "Creating C enviroment"},
 			{"3. Python", "Crearing Python script"},
 			{"4. Shell Script", "Creating Shell script"},
 			{"5. Exit", ""},
 	};
-	int num_of_choices = choices.size();
-	my_items = (ITEM **)calloc(num_of_choices + 1, sizeof(ITEM *));
-	for (size_t i = 0; i < choices.size(); i++)
-	{
-		my_items[i] = new_item(choices[i].first.c_str(),
-													 choices[i].second.c_str());
-	}
-	my_items[num_of_choices] = (ITEM *)NULL;
-
-	my_menu = new_menu((ITEM **)my_items);
-	post_menu(my_menu);
-	refresh();
-
-	int key;
-	unsigned int current_options;
-	while ((key = getch()))
-	{
-		switch (key)
-		{
-		case KEY_DOWN:
-		{
-			menu_driver(my_menu, REQ_DOWN_ITEM);
-			break;
-		}
-		case KEY_UP:
-		{
-			menu_driver(my_menu, REQ_UP_ITEM);
-			break;
-		}
-		case 10: /* ENTER KEY */
-		{
-			move(20, 0);
-			char selected_item = item_name(current_item(my_menu))[0];
-			current_options = static_cast<unsigned int>(selected_item - '0');
-			opt = static_cast<app::Options>(current_options);
-			return opt;
-			break;
-		}
-		}
-	}
-	free(my_items);
-	return opt;
-}
-
-int main(void)
-{
 	init_ncurse();
-	app::Options choice = menu();
+	app::Options choice = app::menu(base_menu);
 	switch (choice)
 	{
-	case app::Options::OPTIONS_1:
-	{
-		app::cpp_menu();
-		break;
-	}
-	case app::Options::OPTIONS_2:
-	{
-		app::c_menu();
-		break;
-	}
-	case app::Options::OPTIONS_3:
-	{
-		app::python_menu();
-		break;
-	}
-	case app::Options::OPTIONS_4:
-	{
-		app::sh_menu();
-		break;
-	}
-	case app::Options::EXIT:
-	{
-		endwin();
-		exit(EXIT_SUCCESS);
-		break;
-	}
-	default:
-	{
-		endwin();
-		exit(EXIT_FAILURE);
-		app::logs_err("Something went wrong");
-	}
+		case app::Options::OPTIONS_1:
+		{
+			app::cpp_menu();
+			break;
+		}
+		case app::Options::OPTIONS_2:
+		{
+			app::c_menu();
+			break;
+		}
+		case app::Options::OPTIONS_3:
+		{
+			app::python_menu();
+			break;
+		}
+		case app::Options::OPTIONS_4:
+		{
+			app::sh_menu();
+			break;
+		}
+		case app::Options::EXIT:
+		{
+			endwin();
+			exit(EXIT_SUCCESS);
+			break;
+		}
+		default:
+		{
+			endwin();
+			exit(EXIT_FAILURE);
+			app::logs_err("Something went wrong");
+		}
 	}
 	endwin();
 	return 0;
