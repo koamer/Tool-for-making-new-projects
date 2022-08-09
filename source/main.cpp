@@ -8,7 +8,10 @@ static void init_ncurse(void)
 	initscr();
 	cbreak();
 	noecho();
+	start_color();
 	keypad(stdscr, TRUE);
+	init_pair(1, COLOR_RED, COLOR_BLACK);
+	init_pair(2, COLOR_CYAN, COLOR_BLACK);
 	app::init_logs_1_stage();
 }
 
@@ -22,30 +25,30 @@ int main(void)
 			{"5. Exit", ""},
 	};
 	init_ncurse();
-	app::Options choice = app::menu(base_menu);
+	app::Options_index choice = app::basic_menu(base_menu);
 	switch (choice)
 	{
-		case app::Options::OPTIONS_1:
+		case 1:
 		{
 			app::cpp_menu();
 			break;
 		}
-		case app::Options::OPTIONS_2:
+		case 2:
 		{
 			app::c_menu();
 			break;
 		}
-		case app::Options::OPTIONS_3:
+		case 3:
 		{
 			app::python_menu();
 			break;
 		}
-		case app::Options::OPTIONS_4:
+		case 4:
 		{
 			app::sh_menu();
 			break;
 		}
-		case app::Options::EXIT:
+		case 5:
 		{
 			endwin();
 			exit(EXIT_SUCCESS);

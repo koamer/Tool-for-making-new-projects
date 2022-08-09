@@ -11,8 +11,7 @@
 const std::string app::get_current_time(void)
 {
 	char time_string[64];
-	auto time = std::chrono::system_clock::now();
-	auto time_c = std::chrono::system_clock::to_time_t(time);
+	auto time_c = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
 	std::tm now_tm = *std::localtime(&time_c);
 	strftime(time_string, sizeof(time_string), "%A %c", &now_tm);
 	return std::string(time_string);
@@ -42,11 +41,12 @@ void app::init_logs_1_stage(void) {
 	}
 }
 
-app::Options app::menu(app::Menu_options& m_options)
+app::Options_index app::basic_menu(app::Menu_options& m_options)
 {
-	enum app::Options opt = app::Options::EXIT;
+	Options_index opt = 0;
 	ITEM **my_items;
 	MENU *my_menu;
+	WINDOW *menu_window;
 	std::size_t num_of_choices = m_options.size();
 	my_items = (ITEM **)calloc(num_of_choices + 1, sizeof(ITEM *));
 	for (size_t i = 0; i < num_of_choices; i++)
@@ -56,12 +56,30 @@ app::Options app::menu(app::Menu_options& m_options)
 	}
 	my_items[num_of_choices] = (ITEM *)NULL;
 
-	my_menu = new_menu((ITEM **)my_items);
-	post_menu(my_menu);
+	my_menu = new_menu((ITEM**)my_items);
+
+	menu_opts_off(my_menu, O_SHOWDESC);
+	menu_window = newwin(10, 70, 4, 4);
+	keypad(menu_window, TRUE);
+	
+	set_menu_win(my_menu, menu_window);
+	set_menu_sub(my_menu, derwin(menu_window, 6, 68, 3, 1));
+	set_menu_format(my_menu, static_cast<int>(num_of_choices), 1);
+	set_menu_mark(my_menu, "  -> ");
+
+	
+    box(menu_window, 0, 0);
+	
+	attron(COLOR_PAIR(2));
+	mvprintw(LINES - 2, 0, "Use Arrow Keys to navigate");
+	attroff(COLOR_PAIR(2));
 	refresh();
 
+	post_menu(my_menu);
+	wrefresh(menu_window);
+
 	int key;
-	unsigned int current_options;
+
 	while ((key = getch()))
 	{
 		switch (key)
@@ -78,16 +96,19 @@ app::Options app::menu(app::Menu_options& m_options)
 		}
 		case 10: /* ENTER KEY */
 		{
-			move(20, 0);
 			char selected_item = item_name(current_item(my_menu))[0];
-			current_options = static_cast<unsigned int>(selected_item - '0');
-			opt = static_cast<app::Options>(current_options);
+			opt = static_cast<Options_index>(selected_item - '0');
 			return opt;
-			break;
 		}
 		}
+		wrefresh(menu_window);
 	}
-	free(my_items);
+	
+	unpost_menu(my_menu);
+    free_menu(my_menu);
+	for(size_t i = 0; i < num_of_choices; ++i) {
+		free_item(my_items[i]);
+	}
 	return opt;
 }
 
